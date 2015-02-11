@@ -47,3 +47,43 @@ int solution(vector<int> &A) {
 
     return maxSum;    
 }
+
+################################################################
+
+// you can use includes, for example:
+// #include <algorithm>
+
+// you can write to stdout for debugging purposes, e.g.
+// cout << "this is a debug message" << endl;
+
+int solution(vector<int> &A) {
+    // write your code in C++11
+    vector<int> endingSum(A.size(), 0);
+    vector<int> startingSum(A.size(), 0);
+    
+    int currSum = 0;
+    for (int i = 1; i < (int)A.size(); ++i)
+    {
+        currSum += A[i];
+        currSum = (currSum < 0) ? 0 : currSum;
+        endingSum[i] = currSum;
+    }
+    
+    currSum = 0;
+    for (int i = A.size() - 2; i >= 0; --i)
+    {
+        currSum += A[i];
+        currSum = (currSum < 0) ? 0 : currSum;
+        startingSum[i] = currSum;
+    }
+    
+    int result = 0;
+    for (int i = 1; i < (int)A.size() - 1; ++i)
+    {
+        int tmpSum = endingSum[i-1] + startingSum[i+1];
+        result = (result < tmpSum ? tmpSum : result);
+    }
+    
+    return result;
+}
+

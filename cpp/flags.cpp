@@ -3,48 +3,63 @@
 
 // you can write to stdout for debugging purposes, e.g.
 // cout << "this is a debug message" << endl;
-bool canTakeFlags(const vector<int> &peaks, int N)
+#include <math.h>
+#include <algorithm>  
+
+bool isPeak (int nL, int p, int nR)
 {
-    int cnt = 1;
-    int lastPeak = peaks.front();
-    for (auto it = peaks.begin()+1; it != peaks.end(); ++it)
+    return (nL < p && nR < p);
+}
+
+bool canTakeKFlags(int k, vector<int> &peaks)
+{
+    int lastFlagPos = peaks.front();
+    int flagsLeft = k - 1;
+    for (auto it = peaks.begin(); it != peaks.end(); ++it)
     {
-        //printf(" %d %d %d %d \n",(*it),lastPeak,cnt,N);
-        if (((*it) - lastPeak) > N)
+        if (*it - lastFlagPos >= k)
         {
-            if (++cnt >= N)
-            {
-                return true;
-            }
+            //set new flag
+            flagsLeft--;
+            lastFlagPos = *it;
+        }
+        if (flagsLeft == 0)
+        {
+            return true;
         }
     }
+    
     return false;
 }
 
 int solution(vector<int> &A) {
     // write your code in C++11
-    int size = A.size();
+    
     vector<int> peaks; 
-    for (int i = 1; i < size - 1; ++i)
+    peaks.reserve(A.size());
+    
+    for (unsigned int i = 1; i < A.size() - 1; ++i)
     {
-        if (A[i-1] < A[i] && A[i+1] < A[i])
+        if (isPeak(A[i-1],A[i],A[i+1]))
         {
-            //printf(" %d %d %d %d \n",A[i-1],A[i],A[i+1],i);
             peaks.push_back(i);
         }
     }
-    int peaksSize = peaks.size();
-    int best = 0;
-    for (int i = 1; i < peaksSize; i++)
+    
+    int possibleMaxFlags = static_cast<int> (sqrt(A.size()) + 1);
+    if (possibleMaxFlags > (int)peaks.size())
     {
-        if(canTakeFlags(peaks, i))
+        possibleMaxFlags = peaks.size();
+    }
+
+    for (unsigned int i = possibleMaxFlags; i > 0; --i)
+    {
+        if (canTakeKFlags(i, peaks))
         {
-            best = i;
-        }
-        else
-        {
-            break;
+            return i;
         }
     }
-    return best;
-}   
+    
+    return 0;
+}
+

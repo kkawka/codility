@@ -56,3 +56,49 @@ vector<int> solution(int N, vector<int> &A) {
 	
 	return res;
 }
+
+
+
+
+
+
+
+############################
+
+
+// you can use includes, for example:
+// #include <algorithm>
+
+// you can write to stdout for debugging purposes, e.g.
+// cout << "this is a debug message" << endl;
+
+vector<int> solution(int N, vector<int> &A) {
+    // write your code in C++11
+    vector <int> result (N, 0); 
+    int maxValue = 0;
+    int maxCommonValue = 0;
+    
+    for (unsigned int i = 0; i < A.size(); ++i)
+    {
+        if (A[i] == N+1)
+        {
+            maxCommonValue = maxValue;
+        }
+        else
+        {
+            result[A[i]-1] = result[A[i]-1] < maxCommonValue ? maxCommonValue + 1 : result[A[i]-1] + 1;
+            maxValue = maxValue < result[A[i]-1] ? result[A[i]-1] : maxValue;
+        }
+    }
+    
+    for (auto it = result.begin(); it != result.end(); ++it)
+    {
+        if (*it < maxCommonValue)
+        {
+            *it = maxCommonValue;
+        }
+    }
+    
+    return result;    
+}
+
